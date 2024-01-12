@@ -1,0 +1,33 @@
+namespace GruppArbete;
+using Xunit;
+
+public class KontrollsiffraCalculatorTests
+{
+    [Theory]
+    [InlineData("8112189876", '6')]  // Exemplet som fanns på wikipedia.
+    [InlineData("011011649", '8')]   // Ett annat exempel
+    // vi kan även addera fler om vi vill testa andra.
+}
+public void BeraknaKontrollsiffra_ValidInput_ReturnsCorrectKontrollsiffra(string input, char expected)
+{
+    // Utför beräkning av kontrollsiffra med givet input
+    char result = KontrollsiffraCalculator.BeraknaKontrollsiffra(input);
+
+    // Jämför det beräknade resultatet med förväntad kontrollsiffra
+    Assert.Equal(expected, result);
+}
+
+[Theory]   // Testar ogiltigt input
+[InlineData("1234567890")]  // färre än 10 siffror
+[InlineData("abcdefghij")]  // icke-numeriska tecken
+[InlineData("123456789")]   // färre än 10 siffror
+// Vi kan även lägga till fler tester om vi vill.
+
+public void BeraknaKontrollsiffra_InvalidInput_ReturnsZero(string input)
+{
+    // Utför beräkning av kontrollsiffra med ogiltigt input
+    char result = KontrollsiffraCalculator.BeraknaKontrollsiffra(input);
+
+    // Jämför det beräknade resultatet med '0', vilket förväntas för ogiltigt input
+    Assert.Equal('0', result);
+}

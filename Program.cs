@@ -1,35 +1,49 @@
-﻿using System;
+﻿namespace GruppArbete;
+
+using System;
 using static System.Console;
 
-class Program
+public class Program
 {
-    static void Main()
+    static void Main() 
     {
-
-        
-        string personnummer = "011011649";
-        char kontrollsiffra = BeraknaKontrollsiffra(personnummer);
-        WriteLine($"Kontrollsiffra: {kontrollsiffra}");
-
-        
+        while (true)
+        {
+            WriteLine("Skriv in ditt personnummer (10 siffor): ");
+            string personnummer = ReadLine();
+            if (personnummer.Length == 10 && personnummer.All(char.IsDigit))
+            {
+                char kontrollsiffra = KontrollsiffraCalculator.BeraknaKontrollsiffra(personnummer);
+                WriteLine($"Kontrollsiffra: {kontrollsiffra}");
+                break;
+            }
+            else
+            {
+                WriteLine("Ogiltigt personnummer. Var god skriv in 10 siffror.");
+            }
+        }
     }
+}
 
-    static char BeraknaKontrollsiffra(string personnummer)
+public class KontrollsiffraCalculator
+{
+    public static char BeraknaKontrollsiffra(string personnummer)
     {
         int summa = 0;
 
-        for (int i = 0; i < personnummer.Length; i++)
+        for (int i = 0; i < personnummer.Length - 1; i++)  // Exkluderar den sista siffran för att se om personnumret stämmer.
         {
             int siffra = int.Parse(personnummer[i].ToString());
-            int viktadSiffra = i % 2 == 0 ? siffra * 2 : siffra;
+            int viktadSiffra = (i % 2 == 0) ? (siffra * 2) : siffra;
 
-            // Om viktad siffra är större än 9, subtrahera 9
-            viktadSiffra = viktadSiffra > 9 ? viktadSiffra - 9 : viktadSiffra;
+            // Om viktad siffra är större än 9 så subtrahera 9.
+            viktadSiffra = (viktadSiffra > 9) ? (viktadSiffra - 9) : viktadSiffra;
 
             summa += viktadSiffra;
         }
 
-        // Beräkna kontrollsiffra så att summan blir jämnt delbar med 10
+        // Denna rad beräknar kontrollsiffran för att göra den totala summan (efter att ha viktat siffrorna) jämnt delbar med 10, 
+        // vilket är en egenskap hos Luhn-algoritmen som vi använder i denna uträkning.
         int kontrollsiffra = (10 - (summa % 10)) % 10;
 
         return kontrollsiffra.ToString()[0];
